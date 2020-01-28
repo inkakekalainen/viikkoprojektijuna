@@ -27,6 +27,7 @@ public class Kayttoliittyma {
 
         while(true) {
             valikkoTeksti();
+            
             Scanner scanner = new Scanner(System.in);
             int luku = Integer.valueOf(scanner.nextLine());
             if (luku == 1) {
