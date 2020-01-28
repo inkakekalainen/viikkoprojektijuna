@@ -2,7 +2,10 @@ package junat;
 
 import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
+
+
 import java.time.format.DateTimeFormatter;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -10,8 +13,10 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Kayttoliittyma {
+
     Scanner scanner = new Scanner(System.in);
     static DateTimeFormatter date;
+
 
     public Kayttoliittyma() {
 
@@ -19,6 +24,10 @@ public class Kayttoliittyma {
 
     public static void kaynnista() {
         JSON_pohja_junat.lueJunanJSONData();
+
+        JSON_pohja_junat.lueJunansijainti();
+     
+
     }
 
     public static void kaynnistaValikko() throws Exception {
@@ -95,10 +104,14 @@ public class Kayttoliittyma {
                     JSON_pohja_junat.getJunat().get(i).trainCategory.equals("Long-distance")) {
                 System.out.print(JSON_pohja_junat.getJunat().get(i).getTrainNumber() + ", ");
                 System.out.println("Junan tyyppi: " + JSON_pohja_junat.getJunat().get(i).getTrainType());
+
             }
             i++;
         }
     }
+
+
+
 
     public static void getLahtoajanPerusteella(String syotettyaika) throws Exception {  //ei toimi
         int i = 0;
@@ -173,3 +186,4 @@ public class Kayttoliittyma {
         System.out.println("0 - Lopeta");
     }
 }
+
