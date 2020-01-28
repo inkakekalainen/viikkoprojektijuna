@@ -38,6 +38,13 @@ public class Kayttoliittyma {
                 continue;
             }
 
+            if(luku == 2) {
+                System.out.print("Syötä lähtöaika: ");
+                String syotettyaika = scanner.nextLine();
+                getLahtoajanPerusteella(syotettyaika);
+                continue;
+            }
+
             if(luku == 3){
                 System.out.print("Anna haettavan junan numero: ");
                 int junannumero = Integer.valueOf(scanner.nextLine());
@@ -92,14 +99,16 @@ public class Kayttoliittyma {
         }
     }
 
-    public static void getLahtoajanPerusteella() throws Exception {
-
+    public static void getLahtoajanPerusteella(String syotettyaika) throws Exception {  //ei toimi
         int i = 0;
         while (i < JSON_pohja_junat.getJunat().size()) {
+            String[] pilkottuaika = JSON_pohja_junat.getJunat().get(i).getTimeTableRows().get(0).scheduledTime.split("T");
+            String[] pilkottukellonaika = pilkottuaika[1].split("\\.");
             if (JSON_pohja_junat.getJunat().get(i).getTimeTableRows().get(0).getStationShortCode().equals("HKI") &&
-                    JSON_pohja_junat.getJunat().get(i).trainCategory.equals("Long-distance")) {
-                //splittaaAika(i, p);
-
+                    JSON_pohja_junat.getJunat().get(i).trainCategory.equals("Long-distance") &&
+                    pilkottukellonaika[0].equals(syotettyaika)) {
+                System.out.println("Tähän aikaan lähtevät junat: ");
+                System.out.println(JSON_pohja_junat.getJunat().get(i).getTrainNumber());
             }
             i++;
         }
@@ -151,7 +160,7 @@ public class Kayttoliittyma {
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (Exception e) {
-            System.out.println("Didn't sleep!");
+            System.out.println("Viive ei onnistunut.");
         }
     }
 
@@ -163,27 +172,3 @@ public class Kayttoliittyma {
         System.out.println("0 - Lopeta");
     }
 }
-
-
-
-
-
-
-
-
-/*
-    int i = 0;
-    int p = 0;
-            while(i < junat.size()) {
-        if (junat.get(i).getTrainNumber() == 37) {
-        // System.out.println(junat.get(i).getTimeTableRows().get(5).getScheduledTime());
-        while (p < junat.get(i).getTimeTableRows().size()){
-        if(junat.get(i).getTimeTableRows().get(p).getStationShortCode().equals("OLK")){
-        System.out.println("JEP JUNA TULEE JA LÄHTEE OGELISTA");
-        break;
-        }
-        p++;
-        }
-        }
-        i++;
-        }*/
