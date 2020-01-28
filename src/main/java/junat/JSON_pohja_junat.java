@@ -50,20 +50,21 @@ public class JSON_pohja_junat {
             mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
             sijainti = mapper.readValue(url2, tarkempiListanTyyppi);  // pelkkä List.class ei riitä tyypiksi
 
-            System.out.println(sijainti.get(0).getLocation().get(0));
+            /*System.out.println(sijainti.get(0).getLocation().get(0));
             //System.out.println("\n\n");
-            System.out.println(sijainti.get(0));
+            System.out.println(sijainti.get(0));*/
 
 
         } catch (Exception ex) {
             System.out.println(ex);
         }
-        int j = 0;
-        int junannumero = 5;
 
+    }
 
+    public static void haeJunanPaikka(int numero) {
+            int j = 0;
         while (j < sijainti.size()) {
-            if (junannumero == sijainti.get(j).getTrainNumber()) {
+            if (numero== sijainti.get(j).getTrainNumber()) {
                 System.out.println("löytyi");
                 System.out.println(sijainti.get(j));
             }
