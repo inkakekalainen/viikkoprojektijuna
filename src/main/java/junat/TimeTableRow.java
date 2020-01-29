@@ -1,15 +1,6 @@
 package junat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.sun.tools.attach.AttachNotSupportedException;
-
-import javax.tools.DocumentationTool;
-import javax.xml.stream.Location;
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class TimeTableRow {
