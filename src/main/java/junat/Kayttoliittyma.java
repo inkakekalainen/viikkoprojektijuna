@@ -307,10 +307,14 @@ public class Kayttoliittyma {
         getAsemanHaku(asemanNimenKonvertointi(lahtoasema), asemanNimenKonvertointi(paateasema));
     }
 
-    public static void teejuna() {
+    public static void soitaMusiikkia(){
         String filepath = "toot-toot.wav";
         Musiikki musicObject = new Musiikki();
         musicObject.playMusic(filepath);
+    }
+
+    public static void teejuna() {
+        soitaMusiikkia();
         System.out.println("                   _-====-__-======-__-========-_____-============-__");
         System.out.println("               _(                                                 _)");
         System.out.println("             OO(           _/_ _  _  _/_   _/_ _  _  _/_           )_");
