@@ -9,7 +9,7 @@ public class Main {
 
         Kayttoliittyma.kaynnistaValikko();
         Kayttoliittyma.kaynnista();
-        JSON_pohja_junat.getJunat();
+        //JSON_pohja_junat.getJunat();
 
     }
 }

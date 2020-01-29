@@ -32,6 +32,7 @@ public class Kayttoliittyma {
     public static void kaynnistaValikko() throws Exception {
         kaynnista();
         otsikkoTeksti();
+        //getLahtoasemanJunat();
 
         while (true) {
             valikkoTeksti();
@@ -46,7 +47,24 @@ public class Kayttoliittyma {
 
                 System.out.print("Syötä lähtöaika: ");
                 String syotettyaika = scanner.nextLine();
-                getLahtoajanPerusteella(syotettyaika);
+
+                String [] tunnitjaminuutit = syotettyaika.split(":");
+                int tunnit = Integer.valueOf(tunnitjaminuutit[0]);
+                if(tunnit == 02){
+                    tunnit = 00;
+                }else if(tunnit == 01){
+                    tunnit = 23;
+                }else if(tunnit == 00){
+                    tunnit = 22;
+                }
+                else{
+                    tunnit = tunnit - 2;
+                }
+                String korjatuttunnit = Integer.valueOf(tunnit).toString() + ":" + tunnitjaminuutit[1] + ":00";
+
+                getLahtoajanPerusteella(korjatuttunnit);
+
+
                 continue;
             }
 
@@ -77,6 +95,15 @@ public class Kayttoliittyma {
 
             }
 
+            else if(luku.equals("5")){
+                System.out.println(nopeinJuna());
+                continue;
+            }
+
+            else if(luku.equals("6")){
+                teejuna();
+                continue;
+            }
 
             else if (luku.equals("0")) {
                 System.out.println("Kiitos hei!");
@@ -91,7 +118,6 @@ public class Kayttoliittyma {
         }
         //getLahtoasemanJunat("HKI");
 
-        //getLahtoajanPerusteella();
 
 
     }
@@ -100,14 +126,14 @@ public class Kayttoliittyma {
 
         int i = 0;
         int p = 0;
+
         while (i < junadata.getJunat().size()) {
             if (junadata.getJunat().get(i).getTrainNumber() == junannumero) {
-                // System.out.println(junat.get(i).getTimeTableRows().get(5).getScheduledTime());
+
                 while (p < junadata.getJunat().get(i).getTimeTableRows().size()) {
                     if (junadata.getJunat().get(i).getTimeTableRows().get(p).getType().equals("ARRIVAL") &&
                             junadata.getJunat().get(i).getTimeTableRows().get(p).trainStopping == true) {
                         System.out.print(asemanNimenKonvertointiPitkaksi(junadata.getJunat().get(i).getTimeTableRows().get(p).getStationShortCode()));
-
                         System.out.println(" " + splittaaAika(i, p));
                     }
                     p++;
@@ -118,17 +144,31 @@ public class Kayttoliittyma {
     }
 
 
-    public static void getLahtoasemanJunat(String koodi) {
+    public static String getLahtoasemanJunat(String asema) {
         int i = 0;
+        String viesti = "";
         while (i < junadata.getJunat().size()) {
-            if (junadata.getJunat().get(i).getTimeTableRows().get(0).getStationShortCode().equals(koodi) &&
-                    junadata.getJunat().get(i).trainCategory.equals("Long-distance")) {
-                System.out.print(junadata.getJunat().get(i).getTrainNumber() + ", ");
-                System.out.println("Junan tyyppi: " + junadata.getJunat().get(i).getTrainType());
+            if (junadata.getJunat().get(i).getTimeTableRows().get(0).getStationShortCode().equals(asema)){
+                viesti += (junadata.getJunat().get(i).getTrainNumber() + ", ");
+                viesti += "Junan tyyppi: " + junadata.getJunat().get(i).getTrainType();
 
             }
             i++;
         }
+        return viesti;
+    }
+
+    public static String nopeinJuna(){
+        JSON_pohja_junat.lueJunansijainti();
+        int nopeus = 0;
+        int junannumero = 0;
+        for(int i = 0; i < junadata.getSijainti().size(); i++){
+            if(junadata.getSijainti().get(i).getSpeed() > nopeus){
+                nopeus = junadata.getSijainti().get(i).getSpeed();
+                junannumero = junadata.getSijainti().get(i).getTrainNumber();
+            }
+        }
+        return "Tämän hetken nopein juna on " + junannumero + " , nopeudella " + nopeus + " km/h.";
     }
 
 
@@ -153,9 +193,19 @@ public class Kayttoliittyma {
         Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(paivays);
         String[] kellonaika = palat[1].split("\\.");
         String kello = kellonaika[0];
+        String [] tunnitjaminuutit = kellonaika[0].split(":");
+        int tunnit = Integer.valueOf(tunnitjaminuutit[0]);
+        if(tunnit == 22){
+            tunnit = 00;
+        }else if(tunnit == 23){
+            tunnit = 01;
+        }else{
+            tunnit = tunnit + 2;
+        }
+        String korjatuttunnit = Integer.valueOf(tunnit).toString();
         // System.out.println(paivays + " splitattu päivä");
         //System.out.println(kello  + " splitattu kellonaika");
-        return kello;
+        return korjatuttunnit + ":" + tunnitjaminuutit[1];
     }
 
     public static String asemanNimenKonvertointi(String asemannimi) {
@@ -208,7 +258,8 @@ public class Kayttoliittyma {
                             junadata.getJunat().get(i).getTimeTableRows().get(p).getType().equals("ARRIVAL")) {
                         int junanumero = junadata.getJunat().get(i).getTrainNumber();
                         //String aika = junadata.getJunat().get(i).getTimeTableRows().get(p).scheduledTime;
-                        String aika = splittaaAika(i, p);
+                        int s = 0;
+                        String aika = splittaaAika(i, s);
                         System.out.println(junanumero + ", " + aika);
                     }
                     p++;
@@ -243,6 +294,8 @@ public class Kayttoliittyma {
         System.out.println("2 - Hae juna lähtöajan perusteella"); //alkaen helsingistä
         System.out.println("3 - Hae reitin asemat"); //junan numeron perusteella
         System.out.println("4 - Hae junan sijainti numeron perusteella");
+        System.out.println("5 - Näytä tämän hetken nopeimman junan numero ja nopeus");
+        System.out.println("6 - Tulosta juna");
         System.out.println("0 - Lopeta");
         System.out.println("Anna valinta: ");
     }
@@ -258,6 +311,22 @@ public class Kayttoliittyma {
 
         getAsemanHaku(asemanNimenKonvertointi(lahtoasema), asemanNimenKonvertointi(paateasema));
     }
+
+    public static void teejuna(){
+        System.out.println("                   _-====-__-======-__-========-_____-============-__");
+        System.out.println("               _(                                                 _)");
+        System.out.println("             OO(           _/_ _  _  _/_   _/_ _  _  _/_           )_");
+        System.out.println("            0  (_          (__(_)(_) (__   (__(_)(_) (__            _)");
+        System.out.println("        o         '=-___-===-_____-========-___________-===-===-='");
+        System.out.println("    .o                                _________");
+        System.out.println("   . ______          ______________  |         |      _____");
+        System.out.println(" _()_||__|| ________ |            |  |_________|   __||___||__");
+        System.out.println("(SIL2020  | |      | |            | __Y______00_| |_         _|");
+        System.out.println("/-OO----OO'='OO--OO'='OO--------OO'='OO-------OO'='OO-------OO¨'=");
+        System.out.println("#####################################################################");
+    }
+
+
 
 }
 
