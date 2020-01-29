@@ -13,6 +13,7 @@ public class Kayttoliittyma {
     Scanner scanner = new Scanner(System.in);
     static DateTimeFormatter date;
     static JSON_pohja_junat junadata;
+    static JSON_pohja_asemat asemadata;
 
 
     public Kayttoliittyma() {
@@ -22,6 +23,8 @@ public class Kayttoliittyma {
     public static void kaynnista() {
         junadata.lueJunanJSONData();
         junadata.lueJunansijainti();
+        asemadata.lueAsemanJSONData();
+        ;
 
 
     }
@@ -36,11 +39,7 @@ public class Kayttoliittyma {
             Scanner scanner = new Scanner(System.in);
             int luku = Integer.valueOf(scanner.nextLine());
             if (luku == 1) {
-                System.out.println("Syötä junan lähtöasema");
-                String lahtoasema = scanner.nextLine();
-                System.out.println("Syötä junan pääteasema");
-                String paateasema = scanner.nextLine();
-                getAsemanHaku(lahtoasema, paateasema);
+                valintaAsema();
                 continue;
             }
 
@@ -60,7 +59,7 @@ public class Kayttoliittyma {
 
             if (luku == 4) {
                 System.out.println("Etsi junan sijainti junanumeron perusteella");
-                int numero= Integer.valueOf(scanner.nextLine());
+                int numero = Integer.valueOf(scanner.nextLine());
                 junadata.haeJunanPaikka(numero);
             }
 
@@ -88,7 +87,7 @@ public class Kayttoliittyma {
                 while (p < junadata.getJunat().get(i).getTimeTableRows().size()) {
                     if (junadata.getJunat().get(i).getTimeTableRows().get(p).getType().equals("ARRIVAL") &&
                             junadata.getJunat().get(i).getTimeTableRows().get(p).trainStopping == true) {
-                        System.out.print(junadata.getJunat().get(i).getTimeTableRows().get(p).getStationShortCode());
+                        System.out.print(asemanNimenKonvertointiPitkaksi(junadata.getJunat().get(i).getTimeTableRows().get(p).getStationShortCode()));
 
                         System.out.println(" " + splittaaAika(i, p));
                     }
@@ -140,6 +139,27 @@ public class Kayttoliittyma {
         return kello;
     }
 
+    public static String asemanNimenKonvertointi(String asemannimi) {
+        String asemanKoodi = "";
+        for (int i = 0; i < asemadata.getAsemat().size(); i++) {
+            if (asemadata.getAsemat().get(i).getStationName().toLowerCase().equals(asemannimi)) {
+                asemanKoodi = asemadata.getAsemat().get(i).getStationShortCode();
+            }
+        }
+        return asemanKoodi;
+    }
+
+    public static String asemanNimenKonvertointiPitkaksi(String lyhenne){
+        String pitkanimi = "";
+        for(int i = 0; i < asemadata.getAsemat().size(); i++){
+            if(asemadata.getAsemat().get(i).getStationShortCode().equals(lyhenne)){
+                pitkanimi = asemadata.getAsemat().get(i).getStationName();
+            }
+        }
+        return pitkanimi;
+    }
+
+
     public static void getAsemanHaku(String lahtoasema, String maarasema) {
         Scanner lukija = new Scanner(System.in);
         int i = 0;
@@ -161,6 +181,8 @@ public class Kayttoliittyma {
             i++;
         }
     }
+
+    /////////////////////VALIKON METODIT/////////////////////////
 
 
     public static void otsikkoTeksti() {
@@ -188,5 +210,22 @@ public class Kayttoliittyma {
         System.out.println("0 - Lopeta");
         System.out.println("Anna valinta: ");
     }
+
+
+    public static void valintaAsema() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Syötä junan lähtöasema");
+        String lahtoasema = scanner.nextLine().toLowerCase();
+        if (lahtoasema.equals("helsinki")) {
+            lahtoasema = "helsinki asema";
+        }
+        System.out.println("Syötä junan pääteasema");
+        String paateasema = scanner.nextLine().toLowerCase();
+        if (paateasema.equals("helsinki")) {
+            paateasema = "helsinki asema";
+        }
+        getAsemanHaku(asemanNimenKonvertointi(lahtoasema), asemanNimenKonvertointi(paateasema));
+    }
+
 }
 
