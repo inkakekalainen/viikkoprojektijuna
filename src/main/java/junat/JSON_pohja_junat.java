@@ -27,13 +27,7 @@ public class JSON_pohja_junat {
             URL url = new URL(URI.create(String.format("%s/live-trains/", baseurl)).toASCIIString());
             ObjectMapper mapper = new ObjectMapper();
             CollectionType tarkempiListanTyyppi = mapper.getTypeFactory().constructCollectionType(ArrayList.class, Juna.class);
-            junat = mapper.readValue(url, tarkempiListanTyyppi);  // pelkkä List.class ei riitä tyypiksi
-
-
-           /* System.out.println(junat.get(1).getTimeTableRows().get(1).getScheduledTime());
-            System.out.println("\n\n");
-            System.out.println(junat.get(1));*/
-
+            junat = mapper.readValue(url, tarkempiListanTyyppi);
 
         } catch (Exception ex) {
             System.out.println(ex);
@@ -48,12 +42,7 @@ public class JSON_pohja_junat {
             ObjectMapper mapper = new ObjectMapper();
             CollectionType tarkempiListanTyyppi = mapper.getTypeFactory().constructCollectionType(ArrayList.class, Lokaatio.class);
             mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-            sijainti = mapper.readValue(url2, tarkempiListanTyyppi);  // pelkkä List.class ei riitä tyypiksi
-
-            /*System.out.println(sijainti.get(0).getLocation().get(0));
-            //System.out.println("\n\n");
-            System.out.println(sijainti.get(0));*/
-
+            sijainti = mapper.readValue(url2, tarkempiListanTyyppi);
 
         } catch (Exception ex) {
             System.out.println(ex);
