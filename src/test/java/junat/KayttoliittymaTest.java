@@ -15,9 +15,4 @@ public class KayttoliittymaTest {
 
     }
 
-    @Test
-    public void tulisiPalauttaaOikeanAsemanLahtevatJunat(){
-        assertEquals("Tulisi palauttaa true jos syöte on numeroita", "23, Junan tyyppi: IC", kayttoliittyma.getLahtoasemanJunat("Rovaniemi"));
-    }
-
 }
