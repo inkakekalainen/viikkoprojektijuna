@@ -308,6 +308,9 @@ public class Kayttoliittyma {
     }
 
     public static void teejuna() {
+        String filepath = "toot-toot.wav";
+        Musiikki musicObject = new Musiikki();
+        musicObject.playMusic(filepath);
         System.out.println("                   _-====-__-======-__-========-_____-============-__");
         System.out.println("               _(                                                 _)");
         System.out.println("             OO(           _/_ _  _  _/_   _/_ _  _  _/_           )_");
